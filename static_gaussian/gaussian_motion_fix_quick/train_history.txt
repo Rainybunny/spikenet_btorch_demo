@@ -1,0 +1,2 @@
+epoch=1 train_loss=0.077224 train_iou=0.000000 train_hit=0.000000 val_loss=0.035694 val_iou=0.015621 val_hit=0.000000
+epoch=2 train_loss=0.031627 train_iou=0.005471 train_hit=0.000000 val_loss=0.019684 val_iou=0.027695 val_hit=0.000000

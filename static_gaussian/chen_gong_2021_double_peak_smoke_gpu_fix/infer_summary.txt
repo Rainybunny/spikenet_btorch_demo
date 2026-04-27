@@ -1,0 +1,22 @@
+model: Chen_and_Gong_2021_unscaled
+output_dir: /home/wangxukang/mice_visual_lab/spikenet_btorch_demo/static_gaussian/chen_gong_2021_double_peak_smoke_gpu_fix
+n_neuron: 4969
+hw: 31, N_i: 1000
+dt_ms: 0.1000
+T_ms: 1200.0
+stim_start_ms: 200.0
+sampler: poisson
+init_fire_prob_e: 0.100
+init_fire_prob_i: 0.000
+device: cuda
+total_spikes: 1023414
+mean_rate_hz: 214.876543
+first_center_win_ms: 819.400
+first_corner_win_ms: 200.600
+winner_switches: 0
+center_win_fraction: 0.010070
+corner_win_fraction: 0.989930
+levy_like_transition: no
+overview_figure: wta_levy_overview.png
+raster_figure: wta_levy_raster.png
+activation_metadata: activation_metadata.npz

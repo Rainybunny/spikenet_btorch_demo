@@ -1,0 +1,58 @@
+{
+  "config": {
+    "base_case": "native_case_c_ten_neurons_nontrivial",
+    "n_class": 4,
+    "samples_per_class": 6,
+    "train_ratio": 0.7,
+    "jitter_std": 0.008,
+    "max_lag_ms": 2.0,
+    "equiv_eps": 0.08,
+    "seed": 20260421
+  },
+  "error_decomposition": {
+    "raw_rmse_mean": 4.878111115893909,
+    "raw_rmse_std": 0.13881289970715072,
+    "aligned_rmse_mean": 4.631562082300221,
+    "aligned_rmse_std": 0.11269836607016054,
+    "aligned_improvement_ratio": 0.05054190602390751,
+    "best_lag_step_mean": 9.479166666666666,
+    "best_lag_step_std": 7.795804382629302,
+    "spike_jitter_ms_median": 0.6000000000000001,
+    "spike_jitter_ms_p90": 1.1
+  },
+  "capability_transfer": {
+    "cpp_train_cpp_test": 0.9208333333333333,
+    "cpp_train_bt_test": 0.25,
+    "bt_train_cpp_test": 0.3375,
+    "bt_train_bt_test": 1.0,
+    "std_cpp_train_cpp_test": 0.0755764881134044,
+    "std_cpp_train_bt_test": 0.0,
+    "std_bt_train_cpp_test": 0.10777097630314637,
+    "std_bt_train_bt_test": 0.0,
+    "gap_cpp_train_in_minus_cross": 0.6708333333333333,
+    "gap_bt_train_in_minus_cross": 0.6625,
+    "gap_cpp_train_ci95": [
+      0.25,
+      0.875
+    ],
+    "gap_bt_train_ci95": [
+      0.375,
+      1.0
+    ],
+    "in_domain_gap_bt_minus_cpp": 0.07916666666666672,
+    "in_domain_gap_ci95": [
+      0.05416666666666667,
+      0.10833333333333334
+    ],
+    "equivalent_cpp_train": false,
+    "equivalent_bt_train": false,
+    "equivalent_in_domain": false,
+    "n_probe_seed": 30
+  },
+  "paths": {
+    "figures": "demo/output_native/strategy_validation_s24/figures",
+    "pair_results": "demo/output_native/strategy_validation_s24/pair_results"
+  },
+  "n_samples": 24,
+  "n_test": 8
+}

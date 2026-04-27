@@ -1,0 +1,47 @@
+{
+  "config": {
+    "base_case": "native_case_c_ten_neurons_nontrivial",
+    "n_class": 4,
+    "samples_per_class": 3,
+    "train_ratio": 0.7,
+    "jitter_std": 0.008,
+    "max_lag_ms": 2.0,
+    "equiv_eps": 0.08,
+    "seed": 20260421
+  },
+  "error_decomposition": {
+    "raw_rmse_mean": 4.874108704632323,
+    "raw_rmse_std": 0.11617493447701283,
+    "aligned_rmse_mean": 4.622521549267597,
+    "aligned_rmse_std": 0.10873643381514657,
+    "aligned_improvement_ratio": 0.05161705875078648,
+    "best_lag_step_mean": 8.808333333333334,
+    "best_lag_step_std": 7.739827553347397,
+    "spike_jitter_ms_median": 0.6000000000000001,
+    "spike_jitter_ms_p90": 1.1
+  },
+  "capability_transfer": {
+    "cpp_train_cpp_test": 0.75,
+    "cpp_train_bt_test": 0.25,
+    "bt_train_cpp_test": 0.25,
+    "bt_train_bt_test": 1.0,
+    "gap_cpp_train_in_minus_cross": 0.5,
+    "gap_bt_train_in_minus_cross": 0.75,
+    "gap_cpp_train_ci95": [
+      0.0,
+      1.0
+    ],
+    "gap_bt_train_ci95": [
+      0.25,
+      1.0
+    ],
+    "equivalent_cpp_train": false,
+    "equivalent_bt_train": false
+  },
+  "paths": {
+    "figures": "/home/vullar/Studio/Playground/spikenet_to_btorch/demo/output_native/strategy_validation/figures",
+    "pair_results": "/home/vullar/Studio/Playground/spikenet_to_btorch/demo/output_native/strategy_validation/pair_results"
+  },
+  "n_samples": 12,
+  "n_test": 4
+}

@@ -1,0 +1,6 @@
+checkpoint: output/qi_gong_2022_train/checkpoint_best.pth
+n_sequences: 20
+n_neuron: 325
+hw: 7, N_i: 100
+mean_iou: 0.089842
+hit_rate_iou>0.5: 0.000000

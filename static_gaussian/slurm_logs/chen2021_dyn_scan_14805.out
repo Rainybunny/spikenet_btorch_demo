@@ -1,0 +1,22 @@
+[scan] total cases: 9
+[scan] output root: /home/wangxukang/mice_visual_lab/spikenet_btorch_demo/static_gaussian/scan_chen2021_dynamics_20260427_165442
+[scan] workers: 2
+[done] ext_0p85     rc=0 switches=0 levy=no
+[done] baseline     rc=0 switches=0 levy=no
+[done] ext_1p15     rc=0 switches=0 levy=no
+[done] noise_0p10   rc=0 switches=0 levy=no
+[done] inh_0p85     rc=0 switches=0 levy=no
+[done] noise_0p20   rc=0 switches=0 levy=no
+[done] inh_1p15     rc=0 switches=0 levy=no
+[done] tau_0p85     rc=0 switches=0 levy=no
+[done] tau_1p15     rc=0 switches=0 levy=no
+[scan] summary csv: /home/wangxukang/mice_visual_lab/spikenet_btorch_demo/static_gaussian/scan_chen2021_dynamics_20260427_165442/scan_summary.csv
+[scan] minimal set csv: /home/wangxukang/mice_visual_lab/spikenet_btorch_demo/static_gaussian/scan_chen2021_dynamics_20260427_165442/minimal_repro_set.csv
+[scan] running full-length evaluation on minimal set...
+[full] baseline_full    rc=0 switches=0 levy=no
+[full] ext_1p15_full    rc=0 switches=0 levy=no
+[full] noise_0p20_full  rc=0 switches=0 levy=no
+[full] inh_1p15_full    rc=0 switches=0 levy=no
+[full] tau_1p15_full    rc=0 switches=0 levy=no
+[scan] minimal full summary: /home/wangxukang/mice_visual_lab/spikenet_btorch_demo/static_gaussian/scan_chen2021_dynamics_20260427_165442/full/minimal_full_summary.csv
+Scan finished. Outputs: spikenet_btorch_demo/static_gaussian/scan_chen2021_dynamics_20260427_165442

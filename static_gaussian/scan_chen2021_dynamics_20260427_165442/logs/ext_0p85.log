@@ -1,0 +1,33 @@
+COMMAND:
+/home/wangxukang/miniconda3/envs/spike_gpu/bin/python /home/wangxukang/mice_visual_lab/spikenet_btorch_demo/chen_gong_2021_static_double_peak.py --device cuda --seed 42 --T-ms 1200.0 --stim-start-ms 200.0 --ext-scale 0.85 --noise-cv 0.0 --inh-scale 1.0 --tau-scale 1.0 --output-dir /home/wangxukang/mice_visual_lab/spikenet_btorch_demo/static_gaussian/scan_chen2021_dynamics_20260427_165442/ext_0p85
+
+STDOUT:
+========================================================================
+Chen and Gong 2021 static double-peak test
+  hw=31, N_e=3969, N_i=1000
+  dt=0.1 ms, T=1200.0 ms, stim_start=200.0 ms
+  centers(y,x) = (0.0, 0.0), (3.141592653589793, 3.141592653589793)
+  device=cuda
+  cuda_name=NVIDIA GeForce RTX 5090
+========================================================================
+  EE edges (N_e=3969)...
+    EE edges: 126,851
+  I->E edges...
+    I->E edges: 392,909
+  E->I edges...
+    E->I edges: 125,256
+  I->I edges...
+    I->I edges: 197,430
+  Assembling sparse delay buckets...
+Network built in 1.96s
+Simulation done in 55.41s
+Saved: /home/wangxukang/mice_visual_lab/spikenet_btorch_demo/static_gaussian/scan_chen2021_dynamics_20260427_165442/ext_0p85/wta_levy_overview.png
+Saved: /home/wangxukang/mice_visual_lab/spikenet_btorch_demo/static_gaussian/scan_chen2021_dynamics_20260427_165442/ext_0p85/wta_levy_raster.png
+Saved: /home/wangxukang/mice_visual_lab/spikenet_btorch_demo/static_gaussian/scan_chen2021_dynamics_20260427_165442/ext_0p85/activation_metadata.npz
+Saved: /home/wangxukang/mice_visual_lab/spikenet_btorch_demo/static_gaussian/scan_chen2021_dynamics_20260427_165442/ext_0p85/infer_summary.txt
+
+STDERR:
+/home/wangxukang/mice_visual_lab/spikenet_btorch_demo/chen_gong_2021_static_double_peak.py:145: UserWarning: Sparse invariant checks are implicitly disabled. Memory errors (e.g. SEGFAULT) will occur when operating on a sparse tensor which violates the invariants, but checks incur performance overhead. To silence this warning, explicitly opt in or out. See `torch.sparse.check_sparse_tensor_invariants.__doc__` for guidance.  (Triggered internally at /pytorch/aten/src/ATen/Context.cpp:791.)
+  w = torch.sparse_coo_tensor(
+/home/wangxukang/mice_visual_lab/spikenet_btorch_demo/chen_gong_2021_static_double_peak.py:149: UserWarning: Sparse CSR tensor support is in beta state. If you miss a functionality in the sparse tensor support, please submit a feature request to https://github.com/pytorch/pytorch/issues. (Triggered internally at /pytorch/aten/src/ATen/SparseCsrTensorImpl.cpp:49.)
+  ).to_sparse_csr()

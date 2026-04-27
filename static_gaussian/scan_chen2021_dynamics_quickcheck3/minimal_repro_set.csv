@@ -1,0 +1,2 @@
+name,factor,ext_scale,noise_cv,inh_scale,tau_scale,returncode,elapsed_s,log,summary,levy_like_transition,winner_switches,center_win_fraction,corner_win_fraction,first_center_win_ms,first_corner_win_ms,mean_rate_hz,total_spikes
+baseline,baseline,1.000000,0.000000,1.000000,1.000000,1,0.020,/home/wangxukang/mice_visual_lab/spikenet_btorch_demo/static_gaussian/scan_chen2021_dynamics_quickcheck3/logs/baseline.log,/home/wangxukang/mice_visual_lab/spikenet_btorch_demo/static_gaussian/scan_chen2021_dynamics_quickcheck3/baseline/infer_summary.txt,missing,,,,,,,

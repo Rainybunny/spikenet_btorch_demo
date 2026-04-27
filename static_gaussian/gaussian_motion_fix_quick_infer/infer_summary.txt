@@ -1,0 +1,6 @@
+checkpoint: demo/output/gaussian_motion_fix_quick/checkpoint_best.pth
+num_sequences: 8
+mean_iou: 0.018128
+hit_rate_iou>0.5: 0.000000
+pred_mot: demo/output/gaussian_motion_fix_quick_infer/pred_mot.txt
+gt_mot: demo/output/gaussian_motion_fix_quick_infer/gt_mot.txt

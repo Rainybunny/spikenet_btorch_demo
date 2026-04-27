@@ -1,0 +1,6 @@
+checkpoint: demo/output/gaussian_motion_smoke/checkpoint_latest.pth
+num_sequences: 3
+mean_iou: 0.020986
+hit_rate_iou>0.5: 0.000000
+pred_mot: demo/output/gaussian_motion_smoke_infer/pred_mot.txt
+gt_mot: demo/output/gaussian_motion_smoke_infer/gt_mot.txt

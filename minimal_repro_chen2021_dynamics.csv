@@ -1,0 +1,6 @@
+name,factor,ext_scale,noise_cv,inh_scale,tau_scale,note
+baseline,baseline,1.0,0.0,1.0,1.0,reference setting
+ext_1p10,ext,1.1,0.0,1.0,1.0,external-input increase
+noise_0p10,noise,1.0,0.1,1.0,1.0,lambda jitter CV increase
+inh_1p10,inh,1.0,0.0,1.1,1.0,inhibitory strength increase
+tau_1p10,tau,1.0,0.0,1.0,1.1,time-constant increase
