@@ -75,6 +75,12 @@ class ChenGong2021Cfg:
     P_ii: float = 0.40
     ee_degree_cv: float = 0.20
 
+    # SpikeNet ChemSyn model-0 transmitter release pulse duration (ms)
+    # Dt_trans = 1.0ms → steps_trans = 10 at dt=0.1ms
+    # The (1-s) gating variable prevents runaway excitation at high firing rates.
+    Dt_trans_AMPA: float = 1.0
+    Dt_trans_GABA: float = 1.0
+
     # Conductances (uS)
     g_mu: float = 4e-3
     g_EI: float = 13.5e-3
@@ -624,6 +630,22 @@ def run_simulation(
     alpha_ext = math.exp(-cfg.dt / cfg.tau_ampa_ext)
     ext_gs = torch.zeros(1, n_total, device=DEVICE, dtype=DTYPE)
 
+    # SpikeNet ChemSyn model-0 pre-synaptic transmitter release state.
+    # s_pre[i]: gating variable; release per step = K_trans*(1-s_pre[i]) when active.
+    # trans_left[i]: remaining release steps after a spike.
+    steps_trans_ampa = max(1, int(round(cfg.Dt_trans_AMPA / cfg.dt)))
+    steps_trans_gaba = max(1, int(round(cfg.Dt_trans_GABA / cfg.dt)))
+    K_trans_ampa = float(1.0 / steps_trans_ampa)
+    K_trans_gaba = float(1.0 / steps_trans_gaba)
+    exp_decay_ampa = math.exp(-cfg.dt / cfg.tau_ampa_rec)
+    exp_decay_gaba = math.exp(-cfg.dt / cfg.tau_gaba_rec)
+    # Per-neuron decay vector: E-neurons use AMPA tau, I-neurons use GABA tau
+    s_pre_decay = torch.ones(1, n_total, device=DEVICE, dtype=DTYPE)
+    s_pre_decay[:, :n_e] = exp_decay_ampa
+    s_pre_decay[:, n_e:] = exp_decay_gaba
+    s_pre = torch.zeros(1, n_total, device=DEVICE, dtype=DTYPE)
+    trans_left = torch.zeros(1, n_total, device=DEVICE, dtype=torch.int32)
+
     spike_t_parts: list[torch.Tensor] = []
     spike_n_parts: list[torch.Tensor] = []
     center_counts_t = torch.zeros((t_steps,), dtype=torch.int32, device=DEVICE)
@@ -652,7 +674,31 @@ def run_simulation(
             rec_current = synapse.current(v_now)
             ext_current = ext_gs * (cfg.E_ampa - v_now)
             z = neuron(rec_current + ext_current)
-            synapse(z)
+
+            # --- ChemSyn model-0 pre-synaptic gating ---
+            # New spikes extend the release window.
+            fired = (z > 0).to(torch.int32)
+            # E neurons: steps_trans_ampa; I neurons: steps_trans_gaba
+            steps_per_neuron = torch.full_like(trans_left, steps_trans_ampa)
+            steps_per_neuron[:, n_e:] = steps_trans_gaba
+            trans_left = trans_left + fired * steps_per_neuron
+            active = trans_left > 0
+            # Release factor: K_trans * (1 - s_pre) where active, else 0.
+            # Use AMPA K_trans for E neurons, GABA K_trans for I neurons.
+            K_trans_e = K_trans_ampa
+            K_trans_g = K_trans_gaba
+            k_trans = torch.full_like(s_pre, K_trans_e)
+            k_trans[:, n_e:] = K_trans_g
+            release = active.float() * k_trans * (1.0 - s_pre)
+            # Update s_pre: increment where active, then decay all.
+            s_pre = torch.where(active, s_pre + k_trans * (1.0 - s_pre), s_pre) * s_pre_decay
+            # Decrement trans_left counter.
+            trans_left = torch.clamp(trans_left - active.to(torch.int32), min=0)
+            # Pass release tensor to synapse channels (AMPA uses E pre-weights,
+            # GABA uses I pre-weights; zero weights mask the other population).
+            ampa_psc = synapse.ampa(release)
+            gaba_psc = synapse.gaba(release)
+            synapse.psc = ampa_psc + gaba_psc
 
             fired_e = z[0, :n_e] > 0
             center_counts_t[t] = fired_e[center_mask_t].sum()
@@ -877,9 +923,14 @@ def save_outputs(
         f.write(f"rate_ext_I: {cfg.rate_ext_I:.6f}\n")
         f.write(f"g_EI: {cfg.g_EI:.6f}\n")
         f.write(f"g_II: {cfg.g_II:.6f}\n")
+        f.write(f"g_mu: {cfg.g_mu:.6f}\n")
         f.write(f"tau_ampa_rec: {cfg.tau_ampa_rec:.6f}\n")
         f.write(f"tau_gaba_rec: {cfg.tau_gaba_rec:.6f}\n")
         f.write(f"tau_ampa_ext: {cfg.tau_ampa_ext:.6f}\n")
+        f.write(f"Dt_trans_AMPA: {cfg.Dt_trans_AMPA:.4f}\n")
+        f.write(f"Dt_trans_GABA: {cfg.Dt_trans_GABA:.4f}\n")
+        f.write(f"steps_trans_ampa: {max(1, int(round(cfg.Dt_trans_AMPA / cfg.dt)))}\n")
+        f.write(f"synapse_model: chemsyn_model0\n")
         f.write(f"device: {DEVICE}\n")
         f.write(f"total_spikes: {total_spikes}\n")
         f.write(f"mean_rate_hz: {mean_rate_hz:.6f}\n")
@@ -939,6 +990,12 @@ def parse_args() -> argparse.Namespace:
         default=1.0,
         help="Scale factor for tau_ampa_rec/tau_gaba_rec/tau_ampa_ext.",
     )
+    parser.add_argument(
+        "--ee-scale",
+        type=float,
+        default=1.0,
+        help="Scale factor for EE mean weight g_mu (controls bump attractor strength).",
+    )
     parser.add_argument("--device", type=str, default="auto", choices=["auto", "cpu", "cuda"])
     return parser.parse_args()
 
@@ -956,6 +1013,7 @@ def main() -> None:
     cfg.tau_ampa_rec *= args.tau_scale
     cfg.tau_gaba_rec *= args.tau_scale
     cfg.tau_ampa_ext *= args.tau_scale
+    cfg.g_mu *= args.ee_scale
 
     torch.manual_seed(cfg.seed)
     np.random.seed(cfg.seed)

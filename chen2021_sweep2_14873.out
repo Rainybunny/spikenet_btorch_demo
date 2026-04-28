@@ -1,0 +1,33 @@
+============================================================
+Job: chen2021_sweep2  ID: 14873
+Node: cccl2  GPU: NVIDIA GeForce RTX 5090
+Python: /home/wangxukang/miniconda3/envs/spike_gpu/bin/python
+Output root: /home/wangxukang/mice_visual_lab/spikenet_btorch_demo/static_gaussian/scan_model0_sweep2
+Start: 2026年 04月 27日 星期一 22:52:46 CST
+============================================================
+[scan] total cases: 17
+[scan] output root: /home/wangxukang/mice_visual_lab/spikenet_btorch_demo/static_gaussian/scan_model0_sweep2
+[scan] workers: 4
+[done] baseline         rc=0 switches=0 levy=no
+[done] ext_1p50         rc=0 switches=0 levy=no
+[done] ext_1p20         rc=0 switches=0 levy=no
+[done] ext_0p80         rc=0 switches=0 levy=no
+[done] ext_2p00         rc=0 switches=0 levy=no
+[done] noise_0p20       rc=0 switches=0 levy=no
+[done] noise_0p30       rc=0 switches=0 levy=no
+[done] noise_0p10       rc=0 switches=0 levy=no
+[done] inh_0p50         rc=0 switches=24 levy=no
+[done] inh_0p60         rc=0 switches=7 levy=no
+[done] inh_0p70         rc=0 switches=0 levy=no
+[done] inh_0p80         rc=0 switches=0 levy=no
+[done] ee_1p50          rc=0 switches=0 levy=no
+[done] ee_2p00          rc=0 switches=0 levy=no
+[done] inh_0p90         rc=0 switches=0 levy=no
+[done] ee_3p00          rc=0 switches=0 levy=no
+[done] ee_4p00          rc=0 switches=0 levy=no
+[scan] summary csv: /home/wangxukang/mice_visual_lab/spikenet_btorch_demo/static_gaussian/scan_model0_sweep2/scan_summary.csv
+[scan] minimal set csv: /home/wangxukang/mice_visual_lab/spikenet_btorch_demo/static_gaussian/scan_model0_sweep2/minimal_repro_set.csv
+============================================================
+Sweep done: 2026年 04月 27日 星期一 23:50:31 CST
+Results: /home/wangxukang/mice_visual_lab/spikenet_btorch_demo/static_gaussian/scan_model0_sweep2/scan_summary.csv
+============================================================

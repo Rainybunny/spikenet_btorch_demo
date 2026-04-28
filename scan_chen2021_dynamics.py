@@ -23,6 +23,7 @@ class SweepCase:
     noise_cv: float
     inh_scale: float
     tau_scale: float
+    ee_scale: float = 1.0
 
 
 def _build_cases(
@@ -30,6 +31,7 @@ def _build_cases(
     noise_levels: list[float],
     inh_levels: list[float],
     tau_levels: list[float],
+    ee_levels: list[float],
 ) -> list[SweepCase]:
     cases: list[SweepCase] = [
         SweepCase(
@@ -39,6 +41,7 @@ def _build_cases(
             noise_cv=0.0,
             inh_scale=1.0,
             tau_scale=1.0,
+            ee_scale=1.0,
         )
     ]
 
@@ -53,6 +56,7 @@ def _build_cases(
                 noise_cv=0.0,
                 inh_scale=1.0,
                 tau_scale=1.0,
+                ee_scale=1.0,
             )
         )
 
@@ -67,6 +71,7 @@ def _build_cases(
                 noise_cv=v,
                 inh_scale=1.0,
                 tau_scale=1.0,
+                ee_scale=1.0,
             )
         )
 
@@ -81,6 +86,7 @@ def _build_cases(
                 noise_cv=0.0,
                 inh_scale=v,
                 tau_scale=1.0,
+                ee_scale=1.0,
             )
         )
 
@@ -95,6 +101,22 @@ def _build_cases(
                 noise_cv=0.0,
                 inh_scale=1.0,
                 tau_scale=v,
+                ee_scale=1.0,
+            )
+        )
+
+    for v in ee_levels:
+        if abs(v - 1.0) < 1e-12:
+            continue
+        cases.append(
+            SweepCase(
+                name=f"ee_{v:.2f}".replace(".", "p"),
+                factor="ee",
+                ext_scale=1.0,
+                noise_cv=0.0,
+                inh_scale=1.0,
+                tau_scale=1.0,
+                ee_scale=v,
             )
         )
 
@@ -164,6 +186,8 @@ def _run_one(
         str(case.inh_scale),
         "--tau-scale",
         str(case.tau_scale),
+        "--ee-scale",
+        str(case.ee_scale),
         "--output-dir",
         str(out_dir),
     ]
@@ -191,6 +215,7 @@ def _run_one(
         "noise_cv": f"{case.noise_cv:.6f}",
         "inh_scale": f"{case.inh_scale:.6f}",
         "tau_scale": f"{case.tau_scale:.6f}",
+        "ee_scale": f"{case.ee_scale:.6f}",
         "returncode": str(proc.returncode),
         "elapsed_s": f"{elapsed:.3f}",
         "log": str(log_path),
@@ -223,7 +248,7 @@ def _pick_minimal_set(rows: list[dict[str, str]]) -> list[dict[str, str]]:
     if "baseline" in by_name:
         selected.append(by_name["baseline"])
 
-    for factor in ("ext", "noise", "inh", "tau"):
+    for factor in ("ext", "noise", "inh", "tau", "ee"):
         cand = [r for r in rows if r["factor"] == factor and r["returncode"] == "0"]
         if not cand:
             continue
@@ -289,6 +314,13 @@ def parse_args() -> argparse.Namespace:
         help="Levels for synaptic-time-constant scaling.",
     )
     parser.add_argument(
+        "--ee-levels",
+        type=float,
+        nargs="+",
+        default=[1.0, 1.5, 2.0, 3.0],
+        help="Levels for EE mean weight scaling (g_mu).",
+    )
+    parser.add_argument(
         "--run-full-on-minimal",
         action="store_true",
         help="Run full-length evaluation on the selected minimal set.",
@@ -303,7 +335,13 @@ def main() -> None:
     out_root = Path(args.output_root).expanduser().resolve()
     out_root.mkdir(parents=True, exist_ok=True)
 
-    cases = _build_cases(args.ext_levels, args.noise_levels, args.inh_levels, args.tau_levels)
+    cases = _build_cases(
+        args.ext_levels,
+        args.noise_levels,
+        args.inh_levels,
+        args.tau_levels,
+        args.ee_levels,
+    )
     print(f"[scan] total cases: {len(cases)}")
     print(f"[scan] output root: {out_root}")
     print(f"[scan] workers: {args.workers}")
@@ -323,6 +361,7 @@ def main() -> None:
                     "noise_cv": f"{c.noise_cv:.6f}",
                     "inh_scale": f"{c.inh_scale:.6f}",
                     "tau_scale": f"{c.tau_scale:.6f}",
+                    "ee_scale": f"{c.ee_scale:.6f}",
                     "returncode": "-1",
                     "elapsed_s": "0.000",
                     "log": "",
@@ -338,7 +377,7 @@ def main() -> None:
                 }
             rows.append(row)
             print(
-                f"[done] {c.name:12s} rc={row['returncode']} "
+                f"[done] {c.name:16s} rc={row['returncode']} "
                 f"switches={row.get('winner_switches', '')} "
                 f"levy={row.get('levy_like_transition', '')}"
             )
@@ -365,6 +404,7 @@ def main() -> None:
                 noise_cv=float(r["noise_cv"]),
                 inh_scale=float(r["inh_scale"]),
                 tau_scale=float(r["tau_scale"]),
+                ee_scale=float(r.get("ee_scale", "1.0")),
             )
             full_args = argparse.Namespace(**vars(args))
             full_args.T_ms = args.full_T_ms
@@ -372,7 +412,7 @@ def main() -> None:
             full_row = _run_one(case, full_args, out_root / "full")
             full_rows.append(full_row)
             print(
-                f"[full] {case.name:16s} rc={full_row['returncode']} "
+                f"[full] {case.name:20s} rc={full_row['returncode']} "
                 f"switches={full_row.get('winner_switches', '')} "
                 f"levy={full_row.get('levy_like_transition', '')}"
             )
